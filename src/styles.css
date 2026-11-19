@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html,
+  body {
+    background: #020617;
+    overscroll-behavior: none;
+  }
+}
