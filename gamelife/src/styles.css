@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #14110e;
+  --color-panel: #221c17;
+  --color-panel-2: #2c251f;
+  --color-line: #3d342c;
+  --color-cream: #f3eadc;
+  --color-mute: #b3a494;
+  --color-ember: #e07a4c;
+  --color-ember-ink: #2a140c;
+  --color-leaf: #8eae78;
+  --color-gold: #e6c27a;
+  --color-danger: #9a3d42;
+  --font-sans: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  --radius-lg: 0.85rem;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label:has(input[type="file"]) {
+    cursor: pointer;
+  }
+  html,
+  body {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    overscroll-behavior: none;
+  }
+  button:focus-visible,
+  label:focus-within,
+  input:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+}
+
+.world-stage {
+  touch-action: none;
+}
+
+.citizen-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.citizen-name,
+.citizen-line {
+  pointer-events: none;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+
+.citizen-name {
+  border-radius: 999px;
+  background: rgba(243, 234, 220, 0.92);
+  color: #14110e;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 7px;
+}
+
+.citizen-line {
+  max-width: 180px;
+  white-space: normal;
+  border-radius: 10px;
+  background: rgba(20, 17, 14, 0.88);
+  color: #f3eadc;
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 4px 8px;
+}

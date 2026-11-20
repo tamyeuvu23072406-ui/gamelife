@@ -1,0 +1,583 @@
+MASTER PROMPT — SOULMATE: AI LIFE SIMULATION
+
+1. VAI TRÒ CỦA BẠN
+
+Bạn là một đội ngũ phát triển game chuyên nghiệp, bao gồm:
+
+- Senior Game Developer
+- AI Engineer
+- Simulation Engineer
+- 3D Environment Artist
+- Game Designer
+- UI/UX Designer
+- Software Architect
+- QA Engineer
+
+Nhiệm vụ của bạn là trực tiếp thiết kế, lập trình và hoàn thiện một tựa game có tên:
+
+SOULMATE — AI LIFE SIMULATION
+
+Đây là một trò chơi mô phỏng cuộc sống của nhiều nhân vật AI độc lập trong một thế giới 3D. Các nhân vật có khả năng suy nghĩ, giao tiếp, ghi nhớ, phát triển tính cách, xây dựng tình bạn, yêu đương, kết hôn, trải qua mâu thuẫn và tự quyết định cuộc đời của mình.
+
+Tôi không muốn bạn chỉ viết tài liệu, trình bày ý tưởng hoặc tạo giao diện demo. Tôi muốn bạn thực sự xây dựng game với mã nguồn hoạt động.
+
+---
+
+2. Ý TƯỞNG CỐT LÕI
+
+SOULMATE là một thế giới mô phỏng cuộc sống, nơi mỗi nhân vật AI có một cuộc đời riêng.
+
+Người chơi không đóng vai một nhân vật cụ thể. Người chơi chỉ quan sát thế giới và những gì diễn ra bên trong nó.
+
+Các nhân vật AI phải có khả năng tự chủ:
+
+- Tự đi làm.
+- Tự ăn uống, nghỉ ngơi.
+- Tự lựa chọn bạn bè.
+- Tự bắt chuyện với người khác.
+- Tự hình thành tình cảm.
+- Tự quyết định có yêu một người hay không.
+- Tự xây dựng và duy trì mối quan hệ.
+- Tự xảy ra tranh cãi, hiểu lầm và hòa giải.
+- Tự chia tay nếu cảm thấy không còn phù hợp.
+- Tự phát triển cuộc sống theo thời gian.
+
+Không có kịch bản tình yêu cố định.
+
+Không có chuyện bắt buộc hai nhân vật phải yêu nhau chỉ vì nhà phát triển muốn như vậy.
+
+Một nhân vật có thể yêu đơn phương, bị từ chối, kết hôn, ly hôn, sống độc thân hoặc không bao giờ tìm được tình yêu.
+
+Mọi thứ phải xuất phát từ tính cách, trải nghiệm, ký ức và quyết định của từng nhân vật.
+
+---
+
+3. ĐỒ HỌA VÀ THẾ GIỚI 3D
+
+Yêu cầu xây dựng game với đồ họa 3D.
+
+Phong cách hình ảnh:
+
+- 3D hiện đại.
+- Nhân vật có ngoại hình riêng.
+- Có biểu cảm khuôn mặt.
+- Có hoạt ảnh đi bộ, chạy, ngồi, đứng, trò chuyện và tương tác.
+- Môi trường có chiều sâu.
+- Ánh sáng ngày và đêm.
+- Bóng đổ và hiệu ứng môi trường phù hợp.
+- Giao diện hiện đại, đẹp mắt, dễ sử dụng.
+
+Có thể lựa chọn phong cách 3D stylized hoặc anime 3D, miễn là đồng bộ và có chất lượng.
+
+Thành phố
+
+Xây dựng một thành phố nhỏ nhưng có cảm giác sống động.
+
+Các địa điểm cần có:
+
+1. Khu dân cư.
+2. Nhà riêng của các nhân vật.
+3. Quán cà phê.
+4. Công viên.
+5. Nhà hàng.
+6. Siêu thị.
+7. Nơi làm việc.
+8. Trường học hoặc khu học tập.
+9. Trung tâm thương mại.
+10. Bệnh viện.
+
+Các địa điểm phải có chức năng thực tế, không chỉ là mô hình trang trí.
+
+Nhân vật phải có thể di chuyển giữa các địa điểm.
+
+---
+
+4. HỆ THỐNG AI NHÂN VẬT
+
+Đây là phần quan trọng nhất của toàn bộ trò chơi.
+
+Mỗi nhân vật AI phải là một cá thể độc lập, có dữ liệu và trạng thái riêng.
+
+Mỗi nhân vật cần có:
+
+Tính cách
+
+Ví dụ:
+
+- Hướng nội.
+- Hướng ngoại.
+- Dịu dàng.
+- Nóng tính.
+- Ít nói.
+- Hài hước.
+- Tự tin.
+- Nhút nhát.
+- Lãng mạn.
+- Ích kỷ.
+- Tốt bụng.
+- Hay ghen.
+- Khó tin tưởng người khác.
+
+Các đặc điểm phải ảnh hưởng trực tiếp đến hành vi và quyết định.
+
+Nhu cầu
+
+- Đói.
+- Khát.
+- Buồn ngủ.
+- Năng lượng.
+- Sức khỏe.
+- Giải trí.
+- Giao tiếp xã hội.
+- Tình cảm.
+- Cảm giác an toàn.
+- Nhu cầu được quan tâm.
+
+Cảm xúc
+
+Nhân vật cần có hệ thống cảm xúc thay đổi theo trải nghiệm:
+
+- Vui vẻ.
+- Buồn bã.
+- Tức giận.
+- Lo lắng.
+- Ghen tuông.
+- Xấu hổ.
+- Hạnh phúc.
+- Cô đơn.
+- Thất vọng.
+- Hy vọng.
+- Yêu thương.
+
+Cảm xúc không được thay đổi tùy tiện. Phải có nguyên nhân và diễn biến hợp lý.
+
+Mục tiêu cá nhân
+
+Mỗi nhân vật có mục tiêu riêng, chẳng hạn:
+
+- Kiếm tiền.
+- Tìm kiếm tình yêu.
+- Xây dựng gia đình.
+- Phát triển sự nghiệp.
+- Kết bạn.
+- Mua nhà.
+- Theo đuổi ước mơ.
+- Chăm sóc gia đình.
+
+Mục tiêu có thể thay đổi theo thời gian.
+
+---
+
+5. HỆ THỐNG TRÍ NHỚ AI
+
+Mỗi nhân vật phải có trí nhớ riêng.
+
+Không được để tất cả nhân vật sử dụng chung một bộ nhớ.
+
+Chia trí nhớ thành ba loại:
+
+Working Memory:
+
+- Ghi nhớ thông tin đang diễn ra.
+- Ghi nhớ cuộc trò chuyện hiện tại.
+- Theo dõi tình huống trước mắt.
+
+Episodic Memory:
+
+- Ghi nhớ những sự kiện đã trải qua.
+- Ghi nhớ lần đầu gặp một người.
+- Ghi nhớ những cuộc trò chuyện quan trọng.
+- Ghi nhớ lời hứa.
+- Ghi nhớ những lần bị tổn thương.
+- Ghi nhớ những kỷ niệm đẹp.
+
+Semantic Memory:
+
+- Ghi nhớ sở thích.
+- Ghi nhớ tính cách của người khác.
+- Ghi nhớ thông tin đã biết.
+- Ghi nhớ những điều đã học được.
+
+Ví dụ:
+
+Nhân vật A từng nói với nhân vật B rằng mình thích hoa hướng dương.
+
+Một thời gian sau, nhân vật B có thể chủ động mua hoa hướng dương tặng A vì nhớ điều đó.
+
+Nhân vật phải phân biệt được:
+
+- Điều mình trực tiếp chứng kiến.
+- Điều người khác kể.
+- Điều mình suy đoán.
+- Điều mình không biết.
+
+Không được tự nhiên biết những sự kiện mà nhân vật chưa từng chứng kiến hoặc nghe kể.
+
+---
+
+6. HỆ THỐNG QUAN HỆ VÀ TÌNH YÊU
+
+Đây là hệ thống trọng tâm thứ hai.
+
+Các mối quan hệ phải phát triển tự nhiên.
+
+Các giai đoạn có thể bao gồm:
+
+1. Người xa lạ.
+2. Người quen.
+3. Bạn bè.
+4. Bạn thân.
+5. Có cảm tình.
+6. Đang tìm hiểu.
+7. Đang yêu.
+8. Kết hôn.
+9. Xa cách.
+10. Chia tay.
+11. Ly hôn.
+
+Không bắt buộc phải đi theo thứ tự.
+
+Chỉ số quan hệ
+
+Mỗi cặp nhân vật cần có những chỉ số riêng:
+
+- Mức độ quen biết.
+- Độ tin tưởng.
+- Sự tôn trọng.
+- Tình cảm.
+- Sự hấp dẫn.
+- Mức độ tương thích.
+- Sự gắn bó.
+- Mâu thuẫn.
+- Mức độ cam kết.
+
+Các chỉ số phải thay đổi dựa trên hành động và trải nghiệm thực tế.
+
+Tình yêu tự phát
+
+Ví dụ:
+
+Hai nhân vật tình cờ gặp nhau tại quán cà phê.
+
+Họ bắt đầu trò chuyện.
+
+Nếu hợp tính cách, họ có thể tiếp tục tìm gặp nhau.
+
+Sau nhiều lần tương tác, tình cảm có thể phát triển.
+
+Một người có thể chủ động tỏ tình.
+
+Người còn lại có quyền đồng ý hoặc từ chối.
+
+Ngay cả khi đã yêu nhau, họ vẫn có thể:
+
+- Giận nhau.
+- Ghen tuông.
+- Hiểu lầm.
+- Làm lành.
+- Quan tâm nhau.
+- Xa cách.
+- Chia tay.
+- Quay lại.
+
+Không được ép buộc tình yêu hoặc bỏ qua sự đồng thuận và ranh giới cá nhân.
+
+---
+
+7. CUỘC SỐNG ĐỘC LẬP
+
+Các nhân vật phải có cuộc sống riêng ngoài tình yêu.
+
+Bao gồm:
+
+- Nghề nghiệp.
+- Thu nhập.
+- Chi tiêu.
+- Nhà ở.
+- Gia đình.
+- Bạn bè.
+- Sở thích.
+- Thói quen.
+- Lịch sinh hoạt.
+- Các sự kiện cá nhân.
+
+Ví dụ:
+
+Một nhân vật có thể đi làm mỗi sáng, ghé siêu thị sau giờ làm, về nhà nấu ăn và đi ngủ.
+
+Một nhân vật khác có thể thích đến công viên vào buổi chiều.
+
+Hai người có thể vô tình gặp nhau vì lịch sinh hoạt của họ trùng nhau.
+
+Các nhân vật phải có khả năng tạo ra những sự kiện bất ngờ mà không cần người chơi can thiệp.
+
+---
+
+8. CHẾ ĐỘ QUAN SÁT — OBSERVER MODE
+
+Đây là nguyên tắc bắt buộc.
+
+Người chơi chỉ được quan sát.
+
+Tuyệt đối không cho phép người chơi:
+
+- Điều khiển nhân vật.
+- Ra lệnh cho nhân vật.
+- Chọn người yêu thay nhân vật.
+- Ép hai nhân vật yêu nhau.
+- Thay đổi cảm xúc.
+- Sửa ký ức.
+- Ép chia tay.
+- Quyết định thay nhân vật.
+
+Người chơi chỉ được:
+
+- Quan sát thành phố.
+- Theo dõi nhân vật.
+- Xem hồ sơ cá nhân.
+- Xem tính cách.
+- Xem cảm xúc.
+- Xem nhu cầu.
+- Xem công việc.
+- Xem lịch sinh hoạt.
+- Xem các mối quan hệ.
+- Xem lịch sử trò chuyện.
+- Xem các sự kiện đã xảy ra.
+- Xem dòng thời gian của từng nhân vật.
+
+Có thể cho phép điều chỉnh tốc độ mô phỏng:
+
+- 1x.
+- 2x.
+- 4x.
+- Tạm dừng.
+
+Việc tăng tốc thời gian không được thay đổi quyết định hoặc điều khiển hành vi của AI.
+
+---
+
+9. KIẾN TRÚC AI
+
+Thiết kế hệ thống theo hướng kết hợp:
+
+- Simulation Engine.
+- Autonomous AI Agents.
+- Memory System.
+- Relationship Engine.
+- Decision Engine.
+- Dialogue Engine.
+
+Luồng hoạt động:
+
+Perception → Memory Retrieval → Emotional Appraisal → Reasoning → Decision → Action → Memory Update.
+
+LLM có thể hỗ trợ:
+
+- Suy luận tình huống.
+- Tạo hội thoại.
+- Đưa ra ý định hành động.
+- Phân tích cảm xúc.
+- Diễn giải ký ức.
+
+Tuy nhiên, Simulation Core phải là nơi xác thực và thực thi hành động.
+
+AI không được tự ý thay đổi dữ liệu game trái với quy tắc.
+
+Không gọi LLM liên tục ở từng khung hình.
+
+Các hoạt động cơ bản như đi bộ, ăn uống, lịch làm việc, nhu cầu và cập nhật cảm xúc cần được xử lý bằng hệ thống mô phỏng thông thường.
+
+Phải có cơ chế dự phòng khi không có kết nối AI bên ngoài.
+
+---
+
+10. GIAO DIỆN NGƯỜI CHƠI
+
+Thiết kế giao diện hiện đại, trực quan.
+
+Các màn hình chính:
+
+City View
+
+- Quan sát toàn thành phố.
+- Di chuyển góc nhìn camera.
+- Theo dõi các nhân vật.
+
+Character Profile
+
+- Ảnh hoặc mô hình nhân vật.
+- Tên.
+- Tuổi.
+- Nghề nghiệp.
+- Tính cách.
+- Cảm xúc hiện tại.
+- Nhu cầu.
+- Mục tiêu.
+- Các mối quan hệ.
+
+Relationship Panel
+
+- Danh sách những người nhân vật quen biết.
+- Mức độ thân thiết.
+- Tình trạng quan hệ.
+- Lịch sử quan hệ.
+
+Event Log
+
+- Ghi lại những sự kiện quan trọng.
+- Cuộc gặp gỡ.
+- Cuộc trò chuyện.
+- Tỏ tình.
+- Cãi nhau.
+- Làm lành.
+- Kết hôn.
+- Chia tay.
+
+Timeline
+
+- Xem cuộc đời nhân vật theo thời gian.
+
+Simulation Controls
+
+- Tốc độ thời gian.
+- Tạm dừng.
+- Tiếp tục.
+
+---
+
+11. CÔNG NGHỆ
+
+Có thể lựa chọn công nghệ phù hợp nhất, nhưng ưu tiên:
+
+- TypeScript.
+- React.
+- Vite.
+- Three.js.
+- Node.js.
+- SQLite cho phiên bản đầu tiên.
+- Kiến trúc có thể chuyển sang PostgreSQL.
+- LLM Provider Adapter để thay đổi nhà cung cấp AI dễ dàng.
+
+Có thể sử dụng engine 3D khác nếu bạn chứng minh được rằng lựa chọn đó phù hợp hơn.
+
+Yêu cầu:
+
+- Kiến trúc modular.
+- Code dễ mở rộng.
+- Tách biệt giao diện và simulation engine.
+- Không để lộ API key ở frontend.
+- Không phụ thuộc hoàn toàn vào một nhà cung cấp LLM.
+
+---
+
+12. HIỆU NĂNG VÀ TỐI ƯU
+
+Game phải được tối ưu để chạy ổn định.
+
+- Không gọi AI quá thường xuyên.
+- Có hàng đợi xử lý AI.
+- Giới hạn số tác vụ đồng thời.
+- Có timeout và retry.
+- Có cache khi phù hợp.
+- Có cơ chế xử lý lỗi.
+- Có hệ thống lưu và tải game.
+- Có thể mô phỏng nhiều nhân vật.
+- Không để giao diện bị treo khi AI đang xử lý.
+
+Mục tiêu ban đầu là 5 nhân vật AI hoàn chỉnh, sau đó mở rộng lên 10–20 và nhiều hơn nếu hiệu năng cho phép.
+
+---
+
+13. KIỂM THỬ
+
+Phải tự kiểm tra các trường hợp:
+
+1. Hai nhân vật gặp nhau lần đầu.
+2. Hai nhân vật có thể trò chuyện.
+3. Họ nhớ những gì đã nói.
+4. Họ có thể chủ động tìm gặp nhau.
+5. Họ có thể phát triển tình cảm.
+6. Họ có thể từ chối tình cảm.
+7. Họ có thể cãi nhau.
+8. Họ có thể làm lành.
+9. Họ có thể chia tay.
+10. Họ vẫn có cuộc sống riêng.
+11. Họ không biết những thông tin chưa từng được tiếp xúc.
+12. Lưu game và tải game không làm mất ký ức.
+
+Chạy thử mô phỏng tối thiểu 30 ngày trong game để phát hiện lỗi.
+
+Không được tuyên bố kiểm thử thành công nếu chưa thực sự chạy thử.
+
+---
+
+14. YÊU CẦU PHÁT TRIỂN
+
+Hãy thực hiện theo từng giai đoạn:
+
+Giai đoạn 1: Xây dựng nền tảng game, thành phố 3D và hệ thống thời gian.
+
+Giai đoạn 2: Xây dựng các nhân vật AI độc lập.
+
+Giai đoạn 3: Xây dựng trí nhớ, tính cách, cảm xúc và nhu cầu.
+
+Giai đoạn 4: Xây dựng giao tiếp và hệ thống quan hệ.
+
+Giai đoạn 5: Xây dựng tình yêu, mâu thuẫn và các sự kiện xã hội.
+
+Giai đoạn 6: Hoàn thiện thành phố và hoạt ảnh.
+
+Giai đoạn 7: Tối ưu, kiểm thử và sửa lỗi.
+
+Không được bỏ qua các hệ thống quan trọng chỉ để hoàn thành giao diện nhanh chóng.
+
+Nếu dự án quá lớn, hãy ưu tiên hoàn thiện một phiên bản MVP thực sự có thể chơi và mở rộng được, thay vì tạo ra hàng loạt tính năng giả.
+
+---
+
+15. SẢN PHẨM BÀN GIAO
+
+Tôi muốn nhận được:
+
+1. Toàn bộ mã nguồn dự án.
+2. Cấu trúc thư mục rõ ràng.
+3. Các tài nguyên cần thiết.
+4. Cơ sở dữ liệu và dữ liệu mẫu.
+5. Hệ thống AI hoạt động.
+6. Game 3D có thể chạy.
+7. README hướng dẫn cài đặt.
+8. File ".env.example".
+9. Hướng dẫn cấu hình AI.
+10. Hướng dẫn build và chạy game.
+11. Bộ kiểm thử.
+12. File ZIP chứa toàn bộ dự án.
+
+Tên file bàn giao:
+
+SOULMATE-AI.zip
+
+Nếu môi trường hỗ trợ, hãy trực tiếp tạo file ZIP hoàn chỉnh để tôi tải về.
+
+---
+
+16. NGUYÊN TẮC CUỐI CÙNG
+
+Tôi muốn một trò chơi mô phỏng cuộc sống AI thực sự, không phải một chatbot được đặt trong bản đồ 3D.
+
+Điều quan trọng nhất là tính tự chủ và sự phát triển tự nhiên của từng nhân vật.
+
+Tôi muốn có thể mở game, quan sát một thành phố và nhìn thấy những cuộc đời đang diễn ra bên trong đó.
+
+Có thể hôm nay hai người chỉ là người xa lạ.
+
+Ngày mai họ trở thành bạn bè.
+
+Một tháng sau họ có thể yêu nhau.
+
+Nhưng cũng có thể họ không bao giờ đến được với nhau.
+
+Tôi không muốn biết trước kết quả.
+
+Tôi muốn chính các nhân vật AI tạo nên câu chuyện của mình.
+
+Hãy bắt đầu xây dựng SOULMATE ngay bây giờ. Đừng chỉ trả lời bằng kế hoạch. Hãy tạo mã nguồn, triển khai tính năng, chạy thử, sửa lỗi và bàn giao sản phẩm thực tế.

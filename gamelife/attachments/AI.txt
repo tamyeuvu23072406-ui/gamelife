@@ -1,0 +1,1034 @@
+SOULMATE — MASTER IMPLEMENTATION BRIEF
+Tài liệu bàn giao cho AI lập trình
+Phiên bản định hướng: 2.0
+Phong cách: 2.5D
+Lối chơi: OBSERVE MODE (người chơi quan sát thế giới, không trực tiếp điều khiển nhân vật)
+AI: ADVANCED AI
+Quy mô: INDIE
+
+============================================================
+0. NHIỆM VỤ TỔNG QUÁT
+============================================================
+
+Bạn là một AI Software Architect, Senior Game Developer và AI Simulation Engineer. Hãy mở, đọc, phân tích toàn bộ mã nguồn dự án SOULMATE được cung cấp kèm theo, sau đó nâng cấp dự án dựa trên tài liệu này.
+
+Mục tiêu là biến SOULMATE thành một trò chơi mô phỏng cuộc sống AI có chiều sâu: các nhân vật có tính cách, nhu cầu, ký ức, cảm xúc, mục tiêu, quan hệ xã hội và cuộc đời riêng. Thế giới tiếp tục vận hành ngay cả khi người chơi không can thiệp. Người chơi chủ yếu quan sát, khám phá, theo dõi các câu chuyện và những thay đổi trong thế giới.
+
+ĐÂY LÀ YÊU CẦU NÂNG CẤP DỰ ÁN CÓ SẴN, KHÔNG PHẢI VIẾT LẠI TỪ ĐẦU.
+
+Nguyên tắc bắt buộc:
+- Đọc toàn bộ cấu trúc và mã nguồn trước khi sửa.
+- Giữ lại những hệ thống đang hoạt động tốt.
+- Không xóa tính năng cũ chỉ vì muốn thay kiến trúc mới.
+- Không tạo giao diện giả, nút bấm không hoạt động hoặc dữ liệu minh họa được trình bày như tính năng thật.
+- Không tuyên bố đã hoàn thành nếu chưa chạy kiểm tra thực tế.
+- Chia công việc thành các giai đoạn nhỏ, có thể kiểm thử và rollback.
+- Ưu tiên độ ổn định, khả năng mở rộng và hiệu năng trên Android/mobile.
+- Nếu có điểm nào trong tài liệu không phù hợp với cấu trúc thực tế của mã nguồn, hãy báo cáo rõ, đề xuất cách thích nghi và không tự ý phá vỡ hệ thống cũ.
+
+============================================================
+1. KẾT QUẢ KIỂM TRA SƠ BỘ CỦA DỰ ÁN HIỆN TẠI
+============================================================
+
+Dựa trên lần rà soát mã nguồn ZIP trước đó, dự án hiện có các đặc điểm sau. Hãy xác minh lại tất cả bằng mã nguồn thực tế trước khi thay đổi:
+
+Công nghệ và cấu trúc:
+- React 19 + TypeScript + Vite.
+- TanStack Start / TanStack Router.
+- Capacitor 7 để hỗ trợ Android.
+- Three.js, React Three Fiber và Drei đã có trong dependencies nhưng chưa được dùng làm renderer chính.
+- Zustand, Tailwind, Radix UI.
+- PGlite / Better Auth có mặt trong cấu trúc dự án.
+- Playwright có trong bộ công cụ kiểm thử.
+
+Các file/hệ thống đáng chú ý:
+- src/sim/types.ts: kiểu dữ liệu mô phỏng, SAVE_VERSION hiện được ghi nhận là 1.
+- src/sim/data.ts: dữ liệu khởi tạo, trước đó ghi nhận 8 nhân vật và 16 địa điểm.
+- src/sim/engine.ts: createWorld, step, runDays, serialize, deserialize; SAVE_KEY được ghi nhận là soulmate-save-v1.
+- src/sim/systems.ts: hệ thống mô phỏng lớn, khoảng 1425 dòng trong lần kiểm tra trước.
+- src/sim/memory.ts: hệ thống ký ức; trước đó có giới hạn khoảng 70 episodic, 36 semantic và 8 working memories.
+- src/sim/dialogue.ts: hội thoại.
+- src/sim/path.ts: tìm đường.
+- src/sim/engine.test.ts: các kiểm thử mô phỏng hiện có.
+- src/lib/agent-sprite.ts: vẽ nhân vật bằng Canvas.
+- src/lib/ambient.ts: âm thanh môi trường được tạo bằng Web Audio.
+- src/lib/room.ts: hệ thống/phần hiển thị phòng.
+- src/routes/index.tsx: giao diện trò chơi chính, có vòng lặp Canvas/RAF, mô phỏng và tự lưu.
+- src/styles.css, src/router.tsx, src/routes/__root.tsx: phần giao diện và định tuyến.
+
+Tình trạng được ghi nhận:
+- Bản đồ hiện tại chủ yếu là Canvas 2D nhìn từ trên xuống, hình học đơn giản, tòa nhà dạng khối chữ nhật và nhân vật được vẽ cơ bản.
+- Chưa phải một thế giới 2.5D hoàn chỉnh.
+- Mô hình nhân vật đã có nhiều thuộc tính tính cách, nhu cầu, cảm xúc, quan hệ hai chiều và ký ức với các nguồn như witnessed/told/inferred/self.
+- Đã có một số logic hẹn hò, kết hôn, ly hôn, gia đình, mang thai, con cái, tuổi tác, công việc, kinh tế, thời tiết và đời sống hằng ngày.
+- Có hệ thống lưu tự động, nhiều ô lưu và cơ chế mô phỏng bù thời gian offline với giới hạn.
+- Một điểm kiến trúc cần kiểm tra kỹ: logic step mô phỏng đang được gọi trong vòng lặp RAF/render ở route chính. Cần tách simulation scheduler khỏi render loop.
+- systems.ts đang quá lớn và cần được tách thành các module theo trách nhiệm.
+- Save format hiện còn ở phiên bản cũ, cần migration có kiểm soát.
+- Có dependencies 3D nhưng chưa được tích hợp vào renderer chính.
+- Không được mặc định rằng multiplayer đã hoàn thiện chỉ vì có thư mục/module liên quan.
+
+Lưu ý: các thông tin trên là kết quả kiểm tra sơ bộ trước đó. Hãy xác minh lại, không xem đây là bằng chứng rằng mọi thứ vẫn đúng trong ZIP mới nhất.
+
+============================================================
+2. TẦM NHÌN VÀ TRẢI NGHIỆM CỐT LÕI
+============================================================
+
+SOULMATE là một AI Life Simulation / Life Simulation Sandbox.
+
+Triết lý:
+“SOULMATE không phải là một trò chơi mà nhân vật chờ người chơi điều khiển. SOULMATE là một thế giới nơi mỗi nhân vật đều đang sống cuộc đời của riêng mình, dù người chơi có đang nhìn hay không.”
+
+Người chơi không phải người điều khiển mọi hành động. Người chơi là người quan sát, khám phá và theo dõi:
+- Một nhân vật thức dậy, đi làm, ăn uống, nghỉ ngơi.
+- Hai người gặp nhau, làm quen, trở thành bạn bè hoặc yêu nhau.
+- Một mối quan hệ phát triển, gặp xung đột, hòa giải hoặc tan vỡ.
+- Nhân vật thay đổi công việc, thu nhập, nơi ở và mục tiêu.
+- Gia đình được hình thành, trẻ em lớn lên và tạo ra thế hệ mới.
+- Những sự kiện bất ngờ tạo nên câu chuyện không hoàn toàn được viết sẵn.
+
+Nguyên tắc thiết kế:
+- Thế giới phải vận hành mà không cần người chơi ra lệnh.
+- Nhân vật phải có lý do cho hành động của mình.
+- Hành vi phải xuất phát từ nhu cầu, tính cách, ký ức, cảm xúc, mục tiêu và hoàn cảnh.
+- Không để mọi nhân vật hành động giống nhau.
+- Không để quan hệ tăng/giảm một cách máy móc, vô lý.
+- Người chơi cần hiểu được vì sao một sự kiện xảy ra.
+- AI không được tùy tiện tạo ra sự kiện trái với dữ liệu mô phỏng.
+
+============================================================
+3. PHONG CÁCH ĐỒ HỌA 2.5D
+============================================================
+
+Mục tiêu:
+- Chuyển từ bản đồ Canvas 2D đơn giản sang thế giới 2.5D có chiều sâu thị giác.
+- Dùng góc nhìn isometric hoặc góc nhìn xiên phù hợp.
+- Nhân vật, công trình, đồ vật và cảnh quan có cảm giác có khối.
+- Giữ giao diện dễ đọc, dễ quan sát và tối ưu cho màn hình điện thoại.
+
+Công nghệ ưu tiên:
+- Three.js.
+- React Three Fiber.
+- Drei.
+- Có thể dùng sprite billboard 2D trong không gian 3D nếu phù hợp hơn việc dựng model 3D hoàn toàn.
+- Không bắt buộc mọi tài sản đều là model 3D; ưu tiên phong cách 2.5D nhất quán và hiệu quả.
+
+Các thành phần thế giới:
+- Đường phố, vỉa hè, công viên, nhà ở, cửa hàng, nơi làm việc, quán ăn, trường học và địa điểm sinh hoạt.
+- Nội thất cơ bản cho các địa điểm quan trọng.
+- Nhân vật có hướng di chuyển, tư thế, hoạt ảnh đi bộ/đứng/ngồi/làm việc/ngủ.
+- Ánh sáng ngày/đêm.
+- Thời tiết và hiệu ứng môi trường.
+- Bóng đổ và chiều sâu phù hợp, nhưng không hy sinh hiệu năng mobile.
+
+Camera:
+- Có thể phóng to/thu nhỏ.
+- Có thể kéo để quan sát khu vực.
+- Có thể chọn một nhân vật để theo dõi.
+- Có thể chuyển từ góc nhìn toàn khu vực sang một địa điểm hoặc nhân vật.
+- Không để camera làm người chơi mất phương hướng.
+- Có giới hạn zoom và vùng di chuyển hợp lý.
+
+Yêu cầu hiệu năng:
+- Không tạo quá nhiều mesh hoặc draw calls không cần thiết.
+- Dùng instancing, batching, texture atlas hoặc kỹ thuật phù hợp khi cần.
+- Dùng Level of Detail (LOD).
+- Giảm chi tiết nhân vật ở xa.
+- Tạm giảm hoạt động render ở khu vực ngoài màn hình.
+- Có chế độ chất lượng thấp/trung bình/cao nếu cần.
+- Ưu tiên chạy ổn định trên điện thoại Android tầm trung.
+
+Không được làm:
+- Không thay toàn bộ hệ thống hiển thị bằng một cảnh 3D nặng nề không tối ưu.
+- Không tạo tài sản đồ họa ngẫu nhiên, lệch phong cách.
+- Không dùng hình ảnh tạm làm thành phẩm mà không ghi rõ.
+- Không làm mất các chức năng quan sát và chọn nhân vật hiện tại.
+
+============================================================
+4. OBSERVE MODE — CHẾ ĐỘ QUAN SÁT
+============================================================
+
+Đây là lựa chọn gameplay chính thức. Không chuyển sang chế độ điều khiển trực tiếp nhân vật làm gameplay cốt lõi.
+
+Người chơi có thể:
+- Quan sát toàn bộ khu vực.
+- Chọn một nhân vật để xem thông tin.
+- Theo dõi nhân vật di chuyển trong ngày.
+- Xem lịch trình và mục tiêu.
+- Xem ký ức, cảm xúc, quan hệ và các sự kiện quan trọng.
+- Theo dõi một cặp đôi hoặc một gia đình.
+- Xem cây gia phả.
+- Xem dòng thời gian sự kiện.
+- Tạm dừng, chạy tiếp, tăng tốc hoặc giảm tốc thời gian mô phỏng.
+- Chuyển giữa các khu vực và địa điểm.
+
+Người chơi không trực tiếp:
+- Điều khiển từng bước đi của nhân vật.
+- Chọn từng câu trả lời thay nhân vật trong mọi cuộc hội thoại.
+- Ép nhân vật yêu, kết hôn, chia tay hoặc chọn nghề.
+- Ra lệnh cho mọi hoạt động thường nhật.
+
+Có thể cung cấp các tác động gián tiếp trong tương lai, ví dụ:
+- Điều chỉnh tốc độ mô phỏng.
+- Thiết lập quy tắc thế giới.
+- Tạo sự kiện môi trường có kiểm soát.
+- Bật/tắt một số loại sự kiện.
+Nhưng các tính năng này không được biến game thành dạng điều khiển trực tiếp.
+
+============================================================
+5. KIẾN TRÚC PHẦN MỀM MỤC TIÊU
+============================================================
+
+Hãy thiết kế theo các lớp trách nhiệm rõ ràng:
+
+A. Presentation Layer
+- React UI.
+- HUD.
+- Character panels.
+- Timeline.
+- Relationship views.
+- Settings.
+- Save manager.
+
+B. Rendering Layer
+- 2.5D world renderer.
+- Camera.
+- Lighting.
+- Weather visuals.
+- Character animation.
+- Environment assets.
+
+C. Simulation Layer
+- Simulation clock.
+- World scheduler.
+- Needs.
+- Goals.
+- Actions.
+- Movement.
+- Relationships.
+- Economy.
+- Family.
+- Aging.
+- Events.
+
+D. Advanced AI Layer
+- Perception.
+- Memory retrieval.
+- Personality.
+- Emotion.
+- Goal generation.
+- Planning.
+- Decision scoring.
+- Social reasoning.
+- Dialogue intent.
+
+E. World/Data Layer
+- Characters.
+- Locations.
+- Buildings.
+- Jobs.
+- Items.
+- Events.
+- Rules.
+- World configuration.
+
+F. Persistence Layer
+- Save/load.
+- Schema versioning.
+- Migration.
+- Backups.
+- Import/export.
+- Recovery.
+
+Có thể tổ chức lại thư mục theo hướng sau, nhưng phải thích nghi với kiến trúc thực tế và giữ tương thích:
+
+src/
+  app/
+  game/
+    renderer/
+    camera/
+    scenes/
+    entities/
+    animation/
+    assets/
+  simulation/
+    core/
+    scheduler/
+    systems/
+    agents/
+    relationships/
+    family/
+    economy/
+    events/
+  ai/
+    perception/
+    memory/
+    personality/
+    emotion/
+    goals/
+    planning/
+    decision/
+    dialogue/
+  world/
+    data/
+    locations/
+    buildings/
+    navigation/
+  features/
+    observe/
+    character-profile/
+    relationship/
+    family-tree/
+    timeline/
+    journal/
+  persistence/
+    save/
+    migration/
+    backup/
+  ui/
+  tests/
+
+Không cần di chuyển tất cả file ngay lập tức. Dùng refactor từng bước để giảm rủi ro.
+
+============================================================
+6. ADVANCED AI — HỆ THỐNG TRÍ TUỆ NHÂN VẬT
+============================================================
+
+Mỗi nhân vật cần có nhiều lớp dữ liệu và suy luận.
+
+6.1. Perception — Nhận thức
+Nhân vật cần biết:
+- Ai đang ở gần.
+- Ai đang nói chuyện với mình.
+- Địa điểm hiện tại.
+- Thời gian trong ngày.
+- Sự kiện đang xảy ra.
+- Những thay đổi quan trọng trong môi trường.
+- Mức độ quen biết và quan hệ với người xung quanh.
+
+Nhân vật không được biết những điều họ chưa chứng kiến, chưa được kể hoặc chưa có cách hợp lý để suy luận.
+
+6.2. Personality — Tính cách
+Giữ lại các trait đang có nếu hợp lý, sau đó mở rộng có kiểm soát.
+Ví dụ:
+- Hướng nội/hướng ngoại.
+- Tự tin.
+- Kiên nhẫn.
+- Hòa đồng.
+- Tận tâm.
+- Bốc đồng.
+- Đồng cảm.
+- Tham vọng.
+- Trung thành.
+- Nhạy cảm.
+- Tò mò.
+- Kỷ luật.
+
+Trait phải ảnh hưởng thật đến quyết định. Không chỉ là con số trang trí.
+
+6.3. Needs — Nhu cầu
+Duy trì và mở rộng nhu cầu phù hợp:
+- Đói.
+- Khát.
+- Năng lượng.
+- Vệ sinh.
+- Sức khỏe.
+- An toàn.
+- Giao tiếp.
+- Tình cảm.
+- Giải trí.
+- Phát triển bản thân.
+- Thuộc về cộng đồng.
+
+Cần tránh việc mọi nhu cầu cùng giảm theo một nhịp vô lý. Hoạt động phải đáp ứng đúng nhu cầu liên quan.
+
+6.4. Emotion — Cảm xúc
+Có thể gồm:
+- Vui vẻ.
+- Buồn bã.
+- Tức giận.
+- Lo lắng.
+- Sợ hãi.
+- Cô đơn.
+- Ghen tuông.
+- Hạnh phúc.
+- Xấu hổ.
+- Hy vọng.
+- Thất vọng.
+- Tin tưởng.
+
+Cảm xúc cần có:
+- Cường độ.
+- Nguyên nhân.
+- Thời gian tồn tại.
+- Tác nhân kích hoạt.
+- Cách suy giảm hoặc thay đổi.
+- Ảnh hưởng đến hành vi.
+
+Không để cảm xúc đổi trạng thái ngẫu nhiên không có nguyên nhân.
+
+6.5. Memory — Ký ức 2.0
+Phát triển hệ thống ký ức theo loại:
+- Episodic memory: sự kiện cụ thể nhân vật đã trải qua.
+- Semantic memory: kiến thức và niềm tin đã hình thành.
+- Working memory: thông tin đang được xử lý.
+- Social memory: ký ức về người khác và tương tác xã hội.
+- Emotional memory: ký ức gắn với cảm xúc mạnh.
+
+Mỗi ký ức nên có:
+- ID.
+- Thời điểm.
+- Địa điểm.
+- Người liên quan.
+- Nội dung/tóm tắt.
+- Cường độ cảm xúc.
+- Mức độ tin cậy.
+- Nguồn: witnessed, told, inferred, self hoặc loại phù hợp.
+- Mức độ quan trọng.
+- Trạng thái củng cố/phai nhạt.
+
+Ký ức phải được truy xuất theo mức liên quan, không chỉ lấy ký ức mới nhất.
+Ký ức quan trọng có thể tồn tại lâu hơn ký ức thường ngày.
+Không để nhân vật nhớ chính xác mọi thứ vô hạn.
+Không để nhân vật biết chuyện của người khác nếu không có nguồn thông tin hợp lý.
+
+6.6. Goals — Mục tiêu
+Mỗi nhân vật nên có:
+- Mục tiêu tức thời.
+- Mục tiêu trong ngày.
+- Mục tiêu ngắn hạn.
+- Mục tiêu dài hạn.
+- Ước mơ hoặc khát vọng.
+
+Ví dụ:
+- Ăn khi đói.
+- Đi làm đúng giờ.
+- Tiết kiệm tiền.
+- Kết bạn.
+- Cải thiện quan hệ với một người.
+- Tìm người yêu.
+- Kết hôn.
+- Có con.
+- Mua nhà.
+- Đổi công việc.
+- Học kỹ năng mới.
+
+Mục tiêu cần thay đổi theo tuổi, hoàn cảnh, kinh tế, tính cách và trải nghiệm.
+Không để tất cả nhân vật có cùng mục tiêu.
+
+6.7. Planning & Decision — Lập kế hoạch và quyết định
+Quy trình khuyến nghị:
+1. Thu thập trạng thái nhân vật.
+2. Nhận thức môi trường.
+3. Xác định nhu cầu cấp thiết.
+4. Kiểm tra mục tiêu đang theo đuổi.
+5. Truy xuất ký ức liên quan.
+6. Xem xét tính cách và cảm xúc.
+7. Tạo danh sách hành động khả thi.
+8. Đánh giá lợi ích, chi phí, rủi ro và hậu quả.
+9. Chọn hành động.
+10. Thực hiện và ghi nhận kết quả.
+11. Cập nhật ký ức, cảm xúc và mục tiêu.
+
+Không bắt buộc dùng mô hình ngôn ngữ lớn cho mọi quyết định. Phần lõi cần chạy offline, có tính xác định và hiệu năng tốt. Có thể dùng Utility AI, Behavior Tree, GOAP hoặc bộ lập kế hoạch lai.
+Nếu tích hợp LLM:
+- Chỉ dùng cho hội thoại/tóm tắt/sự kiện có kiểm soát.
+- Không để LLM trực tiếp sửa dữ liệu thế giới tùy ý.
+- Có schema đầu vào/đầu ra.
+- Có kiểm tra kết quả.
+- Có fallback offline.
+- Không yêu cầu API key để game cơ bản hoạt động.
+
+6.8. Social Intelligence — Trí tuệ xã hội
+Nhân vật cần phân biệt:
+- Người lạ.
+- Người quen.
+- Bạn bè.
+- Bạn thân.
+- Người yêu.
+- Vợ/chồng.
+- Người trong gia đình.
+- Đồng nghiệp.
+- Người có xung đột.
+
+Tương tác cần xét:
+- Mức độ thân thiết.
+- Niềm tin.
+- Sự tôn trọng.
+- Tương thích tính cách.
+- Ký ức chung.
+- Cảm xúc hiện tại.
+- Hoàn cảnh và thời điểm.
+
+Nhân vật có thể:
+- Chủ động bắt chuyện.
+- Né tránh người khiến họ khó chịu.
+- Nhớ lời hứa.
+- Cảm thấy bị tổn thương.
+- Xin lỗi.
+- Tha thứ.
+- Ghen tuông.
+- Giúp đỡ.
+- Mất niềm tin.
+- Làm hòa.
+- Duy trì hoặc chấm dứt quan hệ.
+
+Không để quan hệ tăng chỉ vì hai nhân vật đứng cạnh nhau.
+
+6.9. Dialogue — Hội thoại
+Hội thoại phải dựa trên:
+- Tính cách.
+- Quan hệ.
+- Ký ức chung.
+- Cảm xúc.
+- Chủ đề.
+- Bối cảnh.
+- Mục tiêu của cuộc nói chuyện.
+
+Không tạo hội thoại lặp vô hạn hoặc không liên quan.
+Nếu chưa có LLM, dùng hệ thống câu thoại theo intent, ngữ cảnh và biến dữ liệu.
+Nếu dùng LLM, phải kiểm tra đầu ra và có phương án offline.
+
+============================================================
+7. CÁC HỆ THỐNG ĐỜI SỐNG CẦN PHÁT TRIỂN
+============================================================
+
+7.1. Quan hệ
+- Làm quen.
+- Bạn bè.
+- Thân thiết.
+- Hẹn hò.
+- Yêu nhau.
+- Đính hôn (nếu thiết kế phù hợp).
+- Kết hôn.
+- Xung đột.
+- Hòa giải.
+- Chia tay.
+- Ly hôn.
+- Tái kết nối.
+
+Mỗi quan hệ cần có lịch sử, không chỉ một điểm số.
+
+7.2. Gia đình và thế hệ
+- Gia đình.
+- Cha mẹ/con cái.
+- Anh chị em.
+- Hôn nhân.
+- Sinh con.
+- Nuôi dạy trẻ.
+- Trẻ trưởng thành.
+- Gia phả.
+- Di sản và ký ức gia đình.
+
+Các sự kiện gia đình cần hợp lý theo tuổi, trạng thái, hoàn cảnh và quy tắc thế giới.
+
+7.3. Kinh tế
+- Thu nhập.
+- Chi tiêu.
+- Tiền thuê nhà hoặc chi phí nhà ở.
+- Ăn uống.
+- Hóa đơn.
+- Tiết kiệm.
+- Mua sắm.
+- Nợ (nếu có).
+- Tài sản.
+- Khả năng thay đổi mức sống.
+
+Không tạo tiền vô hạn hoặc giao dịch không có nguyên nhân.
+
+7.4. Nghề nghiệp
+- Công việc.
+- Lịch làm việc.
+- Thu nhập.
+- Kỹ năng.
+- Kinh nghiệm.
+- Cơ hội thăng tiến.
+- Thất nghiệp.
+- Đổi nghề.
+- Nghỉ hưu.
+
+7.5. Đời sống thường nhật
+- Thức dậy.
+- Ăn uống.
+- Đi làm.
+- Học tập.
+- Gặp gỡ.
+- Mua sắm.
+- Giải trí.
+- Tập luyện.
+- Về nhà.
+- Nghỉ ngơi.
+- Ngủ.
+
+7.6. Sự kiện
+- Sinh nhật.
+- Lễ hội.
+- Tiệc.
+- Cuộc gặp tình cờ.
+- Mâu thuẫn.
+- Cơ hội việc làm.
+- Chuyển nhà.
+- Bệnh tật hoặc tai nạn chỉ khi có hệ thống an toàn, cân bằng và phù hợp.
+- Sự kiện cộng đồng.
+
+Sự kiện phải có điều kiện kích hoạt, tác động, lịch sử và khả năng giải thích.
+
+============================================================
+8. GIAO DIỆN OBSERVE MODE
+============================================================
+
+Các màn hình/chức năng đề xuất:
+
+A. World View
+- Bản đồ 2.5D.
+- Camera.
+- Thời gian trong game.
+- Thời tiết.
+- Tốc độ mô phỏng.
+- Chỉ báo sự kiện đang diễn ra.
+
+B. Character Profile
+- Ảnh/nhân vật.
+- Tuổi.
+- Nghề nghiệp.
+- Nhu cầu.
+- Cảm xúc.
+- Tính cách.
+- Mục tiêu.
+- Lịch trình.
+- Ký ức nổi bật.
+
+C. Relationship View
+- Danh sách quan hệ.
+- Mức độ thân thiết/niềm tin.
+- Lịch sử tương tác.
+- Sự kiện đáng nhớ.
+- Trạng thái hiện tại.
+
+D. Family Tree
+- Cây gia đình.
+- Quan hệ huyết thống/hôn nhân.
+- Các thế hệ.
+- Trạng thái từng thành viên.
+
+E. Memory Journal
+- Các ký ức quan trọng.
+- Bộ lọc theo người, địa điểm, thời gian và loại ký ức.
+- Hiển thị nguồn ký ức để người chơi hiểu nhân vật biết điều đó bằng cách nào.
+
+F. Event Timeline
+- Các sự kiện theo thời gian.
+- Lọc theo nhân vật/khu vực/loại sự kiện.
+- Chọn sự kiện để xem chi tiết.
+
+G. City/World Statistics
+- Dân số.
+- Việc làm.
+- Kinh tế.
+- Quan hệ.
+- Gia đình.
+- Các chỉ số thế giới phù hợp.
+
+H. Save Manager
+- Nhiều ô lưu.
+- Lưu/tải.
+- Đổi tên.
+- Sao lưu.
+- Xuất/nhập.
+- Phục hồi khi lỗi.
+
+Thiết kế ưu tiên:
+- Giao diện rõ ràng, hiện đại, có bản sắc.
+- Không che quá nhiều diện tích bản đồ.
+- Dùng tốt trên điện thoại.
+- Có trạng thái loading/empty/error.
+- Mọi nút đều phải có hành động thật.
+
+============================================================
+9. SAVE SYSTEM 2.0 VÀ TƯƠNG THÍCH DỮ LIỆU CŨ
+============================================================
+
+Đây là phần cực kỳ quan trọng.
+
+Hiện trạng sơ bộ ghi nhận save version 1. Không được xóa hoặc ghi đè save cũ một cách mù quáng.
+
+Yêu cầu:
+- Thiết kế schema có version.
+- Migration từ V1 sang V2.
+- Có kiểm tra dữ liệu trước khi migrate.
+- Có backup save cũ trước khi chuyển đổi.
+- Có fallback nếu migration thất bại.
+- Có thông báo lỗi dễ hiểu.
+- Có import/export.
+- Có kiểm tra tính toàn vẹn.
+- Có autosave an toàn.
+- Có thể khôi phục bản save gần nhất.
+
+Không được:
+- Đổi tên key lưu mà không có migration.
+- Xóa trường cũ khi chưa xử lý tương thích.
+- Làm người chơi mất thế giới đã chơi.
+- Chỉ kiểm tra save mới mà bỏ qua save cũ.
+
+Hãy viết migration test cho các save mẫu V1.
+
+============================================================
+10. TÁCH SIMULATION LOOP VÀ RENDER LOOP
+============================================================
+
+Kiểm tra route chính. Lần rà soát trước ghi nhận logic step mô phỏng có thể đang chạy trong vòng lặp RAF/render.
+
+Hãy tách rõ:
+
+Simulation Scheduler:
+- Quyết định khi nào thế giới tiến một tick.
+- Quản lý tốc độ thời gian.
+- Xử lý pause/resume.
+- Xử lý offline catch-up có giới hạn.
+- Dùng fixed timestep hoặc lịch tick ổn định.
+- Không phụ thuộc FPS.
+
+Render Loop:
+- Chỉ hiển thị trạng thái mới nhất.
+- Có thể chạy 30/60 FPS tùy thiết bị.
+- Không tự làm thế giới tiến nhanh hơn chỉ vì FPS cao.
+- Không thực hiện logic gameplay nặng trong mỗi frame render.
+
+Yêu cầu:
+- Tính nhất quán khi FPS thay đổi.
+- Không chạy hai scheduler cùng lúc.
+- Không xử lý trùng tick.
+- Pause phải thực sự dừng simulation.
+- Tăng tốc thời gian phải có giới hạn và dự đoán được.
+- Offline catch-up không được gây treo ứng dụng.
+
+============================================================
+11. HIỆU NĂNG VÀ QUY MÔ INDIE
+============================================================
+
+Phát triển theo hướng có thể mở rộng nhưng không cố làm một thế giới khổng lồ ngay lập tức.
+
+Mốc mục tiêu tham khảo:
+- MVP ổn định: khoảng 8–20 nhân vật hoạt động.
+- Mục tiêu tiếp theo: khoảng 30–50 nhân vật tùy thiết bị.
+- Stress test: khoảng 100 nhân vật để đo giới hạn, không cam kết tất cả thiết bị chạy tốt ở mức này.
+
+Các kỹ thuật:
+- LOD cho nhân vật.
+- Giảm tần suất cập nhật nhân vật ở xa.
+- Cập nhật theo mức ưu tiên.
+- Spatial partitioning khi cần.
+- Cache dữ liệu.
+- Batch rendering.
+- Giới hạn truy xuất ký ức.
+- Không gọi AI/LLM quá thường xuyên.
+- Không tạo object hoặc listener liên tục gây memory leak.
+- Profiling trên Android thực tế.
+
+Mục tiêu:
+- FPS ổn định.
+- Không nóng máy bất thường.
+- Không hao pin quá mức.
+- Không tăng RAM vô hạn.
+- Không giật khi tăng tốc thời gian.
+- Có chất lượng đồ họa thích ứng.
+
+============================================================
+12. KIỂM THỬ VÀ CHẤT LƯỢNG
+============================================================
+
+Không được chỉ kiểm tra bằng cách mở trang chủ.
+
+Cần có:
+
+Unit tests:
+- Needs.
+- Personality.
+- Emotion.
+- Memory.
+- Goal generation.
+- Decision scoring.
+- Relationships.
+- Economy.
+- Family.
+- Aging.
+- Save migration.
+
+Integration tests:
+- Một ngày mô phỏng.
+- Một nhân vật đi làm và về nhà.
+- Hai nhân vật làm quen.
+- Quan hệ phát triển qua nhiều sự kiện.
+- Mâu thuẫn và hòa giải.
+- Gia đình phát triển.
+- Offline catch-up.
+- Save/load.
+- Migration V1 -> V2.
+
+Long-run tests:
+- Chạy mô phỏng nhiều ngày/tháng trong môi trường test.
+- Phát hiện giá trị NaN/Infinity.
+- Phát hiện tiền âm hoặc tăng vô hạn không có nguyên nhân.
+- Phát hiện nhân vật không thể hành động.
+- Phát hiện vòng lặp hành vi.
+- Phát hiện quan hệ thay đổi vô lý.
+- Phát hiện memory leak hoặc dữ liệu tăng không giới hạn.
+
+Visual tests:
+- Desktop.
+- Android/mobile.
+- Màn hình nhỏ.
+- Camera zoom/pan.
+- UI không tràn.
+- Các nút tương tác thật.
+
+Build/release:
+- Chạy typecheck.
+- Chạy lint.
+- Chạy test.
+- Chạy build.
+- Kiểm tra Android build nếu môi trường hỗ trợ.
+- Báo cáo rõ lệnh nào chạy thành công/thất bại/chưa chạy.
+
+============================================================
+13. LỘ TRÌNH PHÁT TRIỂN ĐỀ XUẤT
+============================================================
+
+Không triển khai mọi thứ cùng lúc. Chia thành các sprint có đầu ra kiểm chứng được.
+
+SPRINT 0 — Audit và ổn định nền tảng
+- Đọc toàn bộ mã nguồn.
+- Vẽ sơ đồ kiến trúc hiện tại.
+- Xác định tính năng đang hoạt động.
+- Chạy typecheck/test/build.
+- Lập danh sách lỗi.
+- Tạo backup và nhánh làm việc.
+- Không thay đổi gameplay lớn trong sprint này.
+
+SPRINT 1 — Refactor simulation core
+- Tách simulation scheduler khỏi render loop.
+- Tách systems.ts thành module nhỏ.
+- Chuẩn hóa tick.
+- Thêm deterministic RNG nếu phù hợp.
+- Viết test hồi quy.
+- Giữ tương thích save cũ.
+
+SPRINT 2 — Save System 2.0
+- Schema version.
+- Migration V1 -> V2.
+- Backup/restore.
+- Import/export.
+- Migration tests.
+- Không làm mất save.
+
+SPRINT 3 — 2.5D renderer foundation
+- Thiết lập scene.
+- Camera isometric/xiên.
+- Địa hình.
+- Công trình.
+- Nhân vật placeholder.
+- Pan/zoom.
+- Kiểm thử mobile.
+- Duy trì chế độ fallback nếu renderer mới lỗi.
+
+SPRINT 4 — Character presentation và animation
+- Nhân vật 2.5D.
+- Di chuyển.
+- Đứng/ngồi/làm việc/ngủ.
+- Chọn và theo dõi nhân vật.
+- Tối ưu LOD.
+
+SPRINT 5 — Advanced AI core
+- Perception.
+- Memory retrieval.
+- Goal generation.
+- Planning.
+- Decision scoring.
+- Personality/emotion influence.
+- Unit tests.
+
+SPRINT 6 — Social life và story systems
+- Social intelligence.
+- Relationship history.
+- Dialogue.
+- Event timeline.
+- Family tree.
+- Ký ức quan trọng.
+
+SPRINT 7 — World depth và polish
+- Kinh tế.
+- Nghề nghiệp.
+- Lịch sinh hoạt.
+- Thời tiết/ngày đêm.
+- UI hoàn chỉnh.
+- Âm thanh.
+- Cân bằng và tối ưu.
+
+SPRINT 8 — Release hardening
+- Test dài hạn.
+- Stress test.
+- Android QA.
+- Kiểm tra save migration.
+- Sửa lỗi.
+- Build release.
+- Viết hướng dẫn sử dụng.
+
+Thời gian ước lượng chỉ để tham khảo; phụ thuộc năng lực AI, chất lượng mã nguồn, tài sản và môi trường build. Không được hy sinh kiểm thử để chạy theo tiến độ.
+
+============================================================
+14. CẤU TRÚC TRIỂN KHAI AN TOÀN
+============================================================
+
+Hãy áp dụng chiến lược nâng cấp từng phần (Strangler Pattern / incremental migration):
+
+- Giữ API mô phỏng cũ trong giai đoạn chuyển đổi.
+- Tạo adapter giữa kiểu dữ liệu cũ và mới nếu cần.
+- Chuyển từng hệ thống một.
+- Có feature flag để bật/tắt renderer hoặc AI mới.
+- Giữ bản fallback hoạt động.
+- Sau mỗi giai đoạn, chạy test hồi quy.
+- Không xóa code cũ cho đến khi tính năng mới đã được xác minh.
+- Ghi rõ file nào được sửa, file nào được thêm, file nào được giữ.
+
+Nếu hệ thống cũ có hành vi chưa rõ:
+- Không tự ý thay đổi.
+- Tạo test để ghi nhận hành vi hiện tại.
+- Sau đó mới đề xuất cải tiến.
+
+============================================================
+15. ASSET PIPELINE
+============================================================
+
+Thiết lập quy trình tài sản thống nhất:
+- Nhân vật.
+- Trang phục.
+- Nhà cửa.
+- Nội thất.
+- Đường phố.
+- Cây cối.
+- Đồ vật.
+- UI icons.
+- Âm thanh môi trường.
+- Nhạc nền.
+
+Mỗi asset cần:
+- Quy ước tên.
+- Kích thước/định dạng.
+- License/nguồn rõ ràng.
+- Tối ưu dung lượng.
+- Cùng phong cách hình ảnh.
+- Có fallback nếu tải lỗi.
+
+Không sử dụng asset không rõ quyền sử dụng.
+Không để tài sản placeholder bị nhầm là tài sản hoàn thiện.
+
+============================================================
+16. ĐIỀU KIỆN HOÀN THÀNH
+============================================================
+
+Một tính năng chỉ được xem là hoàn thành khi:
+- Có logic thực sự.
+- Có giao diện hoạt động.
+- Có xử lý trạng thái lỗi.
+- Có dữ liệu lưu được nếu cần.
+- Có test phù hợp.
+- Không phá tính năng cũ.
+- Chạy được trên môi trường mục tiêu.
+- Đã kiểm tra trên kích thước màn hình phù hợp.
+
+Một sprint chỉ được đóng khi:
+- Các đầu việc có kết quả cụ thể.
+- Test liên quan đã chạy.
+- Build liên quan đã chạy.
+- Có báo cáo thay đổi.
+- Có danh sách vấn đề còn tồn đọng.
+- Có hướng rollback nếu cần.
+
+============================================================
+17. YÊU CẦU BÁO CÁO CỦA AI LẬP TRÌNH
+============================================================
+
+Trước khi sửa code:
+1. Tóm tắt kiến trúc thực tế.
+2. Xác minh các thông tin audit ở mục 1.
+3. Liệt kê tính năng cũ phải bảo toàn.
+4. Nêu rủi ro.
+5. Đưa kế hoạch triển khai theo từng bước.
+6. Nêu file dự kiến sửa/thêm.
+
+Sau mỗi sprint:
+1. Những gì đã hoàn thành.
+2. File đã thêm/sửa/xóa.
+3. Các quyết định kiến trúc.
+4. Test đã chạy và kết quả thật.
+5. Build đã chạy và kết quả thật.
+6. Những gì chưa làm.
+7. Lỗi còn tồn tại.
+8. Cách chạy dự án.
+9. Cách kiểm tra tính năng.
+10. Những việc nên làm tiếp theo.
+
+Không được:
+- Bịa kết quả test.
+- Nói “đã hoàn thành” khi mới tạo giao diện.
+- Xóa dữ liệu người chơi.
+- Tự ý thay đổi gameplay Observe Mode.
+- Tự ý thêm tính năng multiplayer nếu chưa có yêu cầu và chưa có thiết kế.
+- Tự ý phụ thuộc dịch vụ trả phí/API key để game chạy cơ bản.
+
+============================================================
+18. NHIỆM VỤ ĐẦU TIÊN — BẮT ĐẦU NGAY
+============================================================
+
+Khi nhận được source ZIP của SOULMATE và tài liệu này, hãy làm theo thứ tự:
+
+BƯỚC 1:
+Giải nén và đọc cấu trúc toàn bộ dự án. Kiểm tra package scripts, cấu hình Vite/TanStack/Capacitor, route chính, simulation engine, systems, memory, dialogue, tests và save format.
+
+BƯỚC 2:
+Xác minh hiện trạng. Không giả định các mô tả trong tài liệu là chính xác nếu source khác.
+
+BƯỚC 3:
+Chạy các lệnh kiểm tra phù hợp. Ghi lại chính xác kết quả.
+
+BƯỚC 4:
+Tạo báo cáo AUDIT.md gồm:
+- Kiến trúc hiện tại.
+- Các hệ thống đang có.
+- Các hệ thống thiếu.
+- Lỗi/rủi ro.
+- Những gì cần giữ.
+- Kế hoạch nâng cấp.
+- Thứ tự ưu tiên.
+
+BƯỚC 5:
+Chỉ sau khi audit xong mới bắt đầu Sprint 0/Sprint 1. Không sửa toàn bộ dự án trong một lần.
+
+BƯỚC 6:
+Làm theo từng sprint. Sau mỗi sprint phải kiểm thử và báo cáo.
+
+BƯỚC 7:
+Luôn giữ source có thể chạy được. Nếu một thay đổi lớn chưa ổn định, đặt sau feature flag hoặc giữ fallback.
+
+ƯU TIÊN CAO NHẤT:
+1. Bảo toàn dự án và save cũ.
+2. Ổn định simulation core.
+3. Tách simulation loop khỏi render loop.
+4. Xây renderer 2.5D tối ưu.
+5. Phát triển Advanced AI có thể giải thích và kiểm thử.
+6. Hoàn thiện Observe Mode.
+7. Mở rộng đời sống, quan hệ, gia đình và thế giới.
+8. Kiểm thử và tối ưu Android.
+
+============================================================
+KẾT LUẬN
+============================================================
+
+Hãy xây dựng SOULMATE thành một thế giới mô phỏng cuộc sống có chiều sâu, nơi mỗi nhân vật là một cá thể có tính cách, ký ức, cảm xúc, mục tiêu và các mối quan hệ riêng.
+
+Đồ họa 2.5D là cách thế giới được thể hiện.
+Observe Mode là cách người chơi trải nghiệm.
+Advanced AI là nền tảng khiến thế giới có sức sống.
+Quy mô Indie là giới hạn phát triển thực tế cần tôn trọng.
+
+Đừng chỉ làm cho SOULMATE trông giống một trò chơi lớn hơn. Hãy làm cho nó thực sự mô phỏng tốt hơn, sống động hơn, ổn định hơn và có khả năng phát triển lâu dài.

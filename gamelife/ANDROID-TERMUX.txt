@@ -1,0 +1,22 @@
+SOULMATE ANDROID BUILD GUIDE
+
+Project: GameLife / Soulmate
+Package: com.soulmate.lifesim
+Framework: Capacitor 8
+
+BUILD WEB:
+npm install
+npm run build:android
+
+SYNC ANDROID:
+npx cap sync android
+
+BUILD APK:
+cd android
+./gradlew assembleDebug
+
+APK:
+android/app/build/outputs/apk/debug/app-debug.apk
+
+Recommended:
+Use GitHub Actions to build APK.

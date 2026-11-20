@@ -1,9 +1,12 @@
-name: Build Android APK
+name: Build GameLife APK
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -11,35 +14,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: temurin
+          java-version: 21
 
-      - name: Install dependencies & Build Web (SPA)
-        run: |
-          npm install
-          npm run build:android
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Init & Sync Capacitor Android
+      - name: Build web
+        run: npm run build:android
+
+      - name: Prepare Android
         run: |
-          npx cap add android || true
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
           npx cap sync android
 
-      - name: Build Debug APK
+      - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: soulmate-debug-apk
+          name: GameLife-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk

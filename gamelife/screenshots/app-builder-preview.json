@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "SOULMATE",
+      "hasCanvas": false,
+      "bodyTextLen": 209,
+      "bodyTextHash": "57a0ab79f0f727145645741e829114f1b7f8a85f74f0bde7e08fbcfb1e9a4555",
+      "bodyTextPrefix": "SOULMATE Đang mở thành phố… Nắng Dừng 1× 4× 16× Theo dõi Phẳng V",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "SOULMATE",
+      "hasCanvas": false,
+      "bodyTextLen": 263,
+      "bodyTextHash": "ae2bfd4f133dd98489a9292b460c21f64d86ff88e592ff144a87f33b1a226fdb",
+      "bodyTextPrefix": "SOULMATE Thứ Hai · Ngày 1 · 07:00 Nắng Dừng 1× 4× 16× Theo dõi P",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
